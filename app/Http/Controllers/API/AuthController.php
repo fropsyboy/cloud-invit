@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\User;
 use Validator;
+use App\Primary_Notification;
 
 class AuthController extends Controller
 {
@@ -26,7 +27,7 @@ class AuthController extends Controller
             'name' => 'required|string',
             'email' => 'required|string|email|unique:users',
             'password' => 'required|string|confirmed',
-            'c_password' => 'required|same:password',
+            'password_confirmation' => 'required|same:password',
         ]);
 
 
@@ -41,6 +42,13 @@ class AuthController extends Controller
             'password' => bcrypt($request->password)
         ]);
         $user->save();
+
+        $notification = new Primary_Notification;
+        $notification->user_id = $user->id;
+        $notification->email = $user->email;
+
+        $notification->save();
+
         return response()->json([
             'message' => 'Successfully created user!'
         ], 201);
@@ -177,33 +185,4 @@ class AuthController extends Controller
         ], 201);
     }
 
-    public function user_update(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required',
-            'c_email' => 'required|same:email'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 401);
-        }
-        $name = $request->name;
-        $lname = $request->region;
-
-        $user = User::where('email', $request->email)->first();
-        if(!$user)
-            return response()->json(['message' => 'Unauthorized, Your Email Dose not Exists in our database'], 401);
-
-
-        User::where('email', $request->email)->update([
-            'email' => $request->email,
-            'name' => $request->name,
-            'lname' => $request->lname
-                ]);
-    
-    
-        return response()->json([
-        'message' => 'User details successfully updated.!'
-        ], 201);
-    }
 }

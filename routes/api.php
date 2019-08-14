@@ -31,7 +31,9 @@ Route::group([
     ], function() {
         Route::get('logout', 'API\AuthController@logout');
         Route::get('user', 'API\AuthController@user');
-        Route::post('user/update', 'API\AuthController@user_update');
+        Route::post('user/update', 'API\UserController@user_update');
+        Route::post('user/update/password', 'API\UserController@user_update_password');
+        Route::post('user/notification/add', 'API\UserController@user_notification_add');
 
     });
 });
