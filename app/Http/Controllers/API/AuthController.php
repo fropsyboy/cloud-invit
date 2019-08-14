@@ -36,6 +36,7 @@ class AuthController extends Controller
 
         $user = new User([
             'name' => $request->name,
+            'lname' => $request->lname,
             'email' => $request->email,
             'password' => bcrypt($request->password)
         ]);
@@ -173,6 +174,36 @@ class AuthController extends Controller
     
         return response()->json([
         'message' => 'Your Password has been updated successfully.!'
-    ], 201);
+        ], 201);
+    }
+
+    public function user_update(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required',
+            'c_email' => 'required|same:email'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 401);
+        }
+        $name = $request->name;
+        $lname = $request->region;
+
+        $user = User::where('email', $request->email)->first();
+        if(!$user)
+            return response()->json(['message' => 'Unauthorized, Your Email Dose not Exists in our database'], 401);
+
+
+        User::where('email', $request->email)->update([
+            'email' => $request->email,
+            'name' => $request->name,
+            'lname' => $request->lname
+                ]);
+    
+    
+        return response()->json([
+        'message' => 'User details successfully updated.!'
+        ], 201);
     }
 }

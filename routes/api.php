@@ -31,5 +31,7 @@ Route::group([
     ], function() {
         Route::get('logout', 'API\AuthController@logout');
         Route::get('user', 'API\AuthController@user');
+        Route::post('user/update', 'API\AuthController@user_update');
+
     });
 });
