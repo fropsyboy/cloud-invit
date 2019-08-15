@@ -18,7 +18,8 @@ use Illuminate\Http\Request;
 // });
 
 Route::group([
-    'prefix' => 'v1'
+    'prefix' => 'v1',
+    'middleware' => 'cors'
 ], function () {
     Route::post('login', 'API\AuthController@login');
     Route::post('signup', 'API\AuthController@signup');
