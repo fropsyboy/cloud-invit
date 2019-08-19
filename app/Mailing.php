@@ -9,7 +9,7 @@ class Mailing extends Model
     //
 
     protected $fillable = [
-        'name', 'description', 'status', 'user_id'
+        'name', 'description', 'status', 'user_id', 'sender', 'venue', 'address', 'date', 'time'
     ];
 
 
