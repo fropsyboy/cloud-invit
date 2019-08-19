@@ -36,5 +36,14 @@ Route::group([
         Route::post('user/update/password', 'API\UserController@user_update_password');
         Route::post('user/notification/add', 'API\UserController@user_notification_add');
 
+        Route::get('invite', 'API\MailingController@invite');
+        Route::post('invite/add', 'API\MailingController@invite_add');
+
+        Route::get('custom', 'API\MailingController@custom');
+        Route::get('custom/images/{id}', 'API\MailingController@custom_images');
+
+
+        Route::post('favourite/add', 'API\MailingController@favourite_add');
+
     });
 });
