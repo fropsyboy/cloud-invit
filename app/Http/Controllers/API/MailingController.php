@@ -16,7 +16,27 @@ use App\Image;
 
 class MailingController extends Controller
 {
-    //
+    
+
+    public function invite()
+    {
+        $user = auth()->user();
+
+        $mailing = Mailing::where('user_id',$user->id)->orderBy('id','desc')->get();
+
+        return response()->json($mailing,201);
+
+    }
+
+    public function invite_get($invite_id)
+    {
+        $customs = Mailing::where('id',$invite_id)->first();
+
+        return response()->json($customs,201);
+
+    }
+
+
     public function invite_add(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -42,13 +62,35 @@ class MailingController extends Controller
         ], 201);
     }
 
-    public function invite()
+    public function invite_update(Request $request)
     {
+        $invite_id = $request->mailing_id;
+
         $user = auth()->user();
 
-        $mailing = Mailing::where('user_id',$user->id)->orderBy('id','desc')->get();
+        $checker = Mailing::where('id',$invite_id)->where('user_id', $user->id)->count();
 
-        return response()->json($mailing,201);
+        if ($checker < 1)
+            return response()->json(['error' => 'Mailing Id Not found Please Confirm If ID exists'], 401);
+
+        try {
+
+            Mailing::where('id', $invite_id)->update([
+                'name' => $request->name,
+                'sender' => $request->sender_name,
+                'venue' => $request->venue,
+                'address' => $request->address,
+                'date' => $request->date,
+                'time' => $request->time,
+                ]);
+
+            return response()->json('Mailing Details Updated successfully',201);
+
+            } catch (\Throwable $e) {
+
+            return response()->json(['error' => $e], 401);
+
+            }
 
     }
 
