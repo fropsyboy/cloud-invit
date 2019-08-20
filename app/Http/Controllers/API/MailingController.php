@@ -52,7 +52,11 @@ class MailingController extends Controller
         $mailing = new Mailing([
             'user_id' => $user->id,
             'name' => $request->name,
-            'description' => $request->description,
+            'sender' => $request->sender_name,
+            'venue' => $request->venue,
+            'address' => $request->address,
+            'date' => $request->date,
+            'time' => $request->time,
         ]);
         $mailing->save();
 
