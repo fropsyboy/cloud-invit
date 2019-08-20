@@ -14,29 +14,54 @@ class ContactsController extends Controller
 
     public function contact($mailing_id)
     {
+        try {
+
         $user = auth()->user();
 
         $mailing = Mailing_Contact::with('mailing', 'contact')->where('user_id',$user->id)->where('mailing_id', $mailing_id)->orderBy('id','desc')->get();
 
-        return response()->json($mailing,201);
+        return response()->json($mailing,200);
+
+    } catch (\Throwable $e) {
+
+        return response()->json(['error' => 'Mailing Id Dose not Exist'], 401);
+
+    }
 
     }
 
     public function contact_all()
     {
+        try {
+
         $user = auth()->user();
 
         $mailing = contact::where('user_id',$user->id)->orderBy('id','desc')->get();
 
-        return response()->json($mailing,201);
+        return response()->json($mailing,200);
+
+    } catch (\Throwable $e) {
+
+        return response()->json(['error' => 'Error occured while fetching Mailing'], 401);
+
+    }
 
     }
 
     public function contact_get($contact_id, $mailing_id)
     {
+
+        try {
+
         $customs = Mailing_Contact::with('mailing', 'contact')->where('contact_id',$contact_id)->where('mailing_id', $mailing_id)->orderBy('id','desc')->first();
 
-        return response()->json($customs,201);
+        return response()->json($customs,200);
+
+        } catch (\Throwable $e) {
+
+            return response()->json(['error' => 'Mailing Id or contact Id Dose not Exist'], 401);
+
+        }
 
     }
 
@@ -85,7 +110,7 @@ class ContactsController extends Controller
 
             return response()->json([
                 'message' => 'Mailing Successfully Sent!'
-            ], 201);
+            ], 200);
 
         } catch (\Throwable $e) {
 
