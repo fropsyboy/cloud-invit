@@ -24,7 +24,7 @@ class MailingController extends Controller
 
         $mailing = Mailing::where('user_id',$user->id)->orderBy('id','desc')->get();
 
-        return response()->json($mailing,201);
+        return response()->json($mailing,200);
 
     }
 
@@ -32,7 +32,7 @@ class MailingController extends Controller
     {
         $customs = Mailing::where('id',$invite_id)->first();
 
-        return response()->json($customs,201);
+        return response()->json($customs,200);
 
     }
 
@@ -68,6 +68,14 @@ class MailingController extends Controller
 
     public function invite_update(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'mailing_id' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 401);
+        }
+
         $invite_id = $request->mailing_id;
 
         $user = auth()->user();
@@ -102,7 +110,7 @@ class MailingController extends Controller
     {
         $customs = Custom::orderBy('id','desc')->get();
 
-        return response()->json($customs,201);
+        return response()->json($customs,200);
 
     }
 
@@ -110,14 +118,14 @@ class MailingController extends Controller
     {
         $customs = Image::where('custom_id',$custom_id)->orderBy('id', 'desc')->get();
 
-        return response()->json($customs,201);
+        return response()->json($customs,200);
 
     }
 
     public function favourite_add(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'custom_id' => 'required|string'
+            'custom_id' => 'required'
         ]);
 
         if ($validator->fails()) {
