@@ -89,4 +89,14 @@ class UserController extends Controller
         'message' => 'Notification Email Successfully updated.!'
         ], 201);
     }
+
+    public function user_notification_get()
+    {
+        $user = auth()->user();
+
+        $customs = Primary_Notification::where('user_id', $user->id)->where('status', 'active')->orderBy('id','desc')->get();
+
+        return response()->json($customs,200);
+
+    }
 }
