@@ -35,6 +35,8 @@ Route::group([
         Route::post('user/update', 'API\UserController@user_update');
         Route::post('user/update/password', 'API\UserController@user_update_password');
         Route::post('user/notification/add', 'API\UserController@user_notification_add');
+        Route::get('user/notification', 'API\UserController@user_notification_get');
+
 
         Route::get('invites', 'API\MailingController@invite');
         Route::get('invite/{id}', 'API\MailingController@invite_get');
