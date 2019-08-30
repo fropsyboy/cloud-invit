@@ -47,6 +47,8 @@ Route::group([
         Route::get('custom', 'API\MailingController@custom');
         Route::get('custom/images/{id}', 'API\MailingController@custom_images');
         Route::post('favourite/add', 'API\MailingController@favourite_add');
+        Route::post('custom/category/add', 'API\MailingController@custom_add');
+
 
         Route::get('contacts', 'API\ContactsController@contact_all');
         Route::get('contacts/mailing/{id}', 'API\ContactsController@contact');

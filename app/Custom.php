@@ -9,6 +9,6 @@ class Custom extends Model
     //
 
     protected $fillable = [
-        'path', 'status'
+        'path', 'status', 'name', 'status', 'description'
     ];
 }
