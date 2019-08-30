@@ -150,4 +150,34 @@ class MailingController extends Controller
             'message' => 'Successfully created Mailing!'
         ], 201);
     }
+
+    public function custom_add(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'name' => 'required|unique:customs'
+        ]);
+
+        
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 401);
+        }
+
+        $imageName = time().'.'.request()->image->getClientOriginalExtension();
+
+        request()->image->move(public_path('images'), $imageName);
+
+        $custom = new Custom([
+            'name' => $request->name,
+            'description' => $request->description,
+            'path' => 'images/'.$imageName,
+            'status' => 'active'
+        ]);
+        $custom->save();
+
+
+        return response()->json([
+            'message' => 'Successfully uploaded custome image!'
+        ], 201);
+    }
 }
