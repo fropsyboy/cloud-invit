@@ -108,7 +108,7 @@ class MailingController extends Controller
 
     public function custom()
     {
-        $customs = Custom::orderBy('id','desc')->get();
+        $customs = Custom::where('status', 'active')->orderBy('id','desc')->get();
 
         return response()->json($customs,200);
 
@@ -116,7 +116,7 @@ class MailingController extends Controller
 
     public function custom_images($custom_id)
     {
-        $customs = Image::where('custom_id',$custom_id)->orderBy('id', 'desc')->get();
+        $customs = Image::where('custom_id',$custom_id)->where('status', 'active')->orderBy('id', 'desc')->get();
 
         return response()->json($customs,200);
 
@@ -178,6 +178,100 @@ class MailingController extends Controller
 
         return response()->json([
             'message' => 'Successfully uploaded custome image!'
+        ], 201);
+    }
+
+    public function custom_edit(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'custom_image_id' => 'required'
+        ]);
+
+        
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 401);
+        }
+
+        if($request->image){
+        $imageName = time().'.'.request()->image->getClientOriginalExtension();
+
+        request()->image->move(public_path('images'), $imageName);
+        }
+
+        $details = Custom::where('id', $request->custom_image_id)->first();
+
+        Custom::where('id', $request->custom_image_id)->update([
+            'name' => $request->name ? $request->name : $details->name,
+            'description' => $request->description ? $request->description : $details->description,
+            'path' =>  $request->image ? 'images/'.$imageName : $details->path,
+            'status' => $request->status ? $request->status : $details->status
+            ]);
+
+
+        return response()->json([
+            'message' => 'Successfully updated custome image!'
+        ], 201);
+    }
+
+    public function image_add(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'custom_image_id' => 'required',
+            'name' => 'required'
+        ]);
+
+        
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 401);
+        }
+
+        $imageName = time().'.'.request()->image->getClientOriginalExtension();
+
+        request()->image->move(public_path('images'), $imageName);
+
+
+        $custom = new Image([
+            'name' => $request->name,
+            'custom_id' => $request->custom_image_id,
+            'path' =>  'images/'.$imageName,
+            'status' => 'active'
+        ]);
+        $custom->save();
+
+
+        return response()->json([
+            'message' => 'Successfully uploaded image!'
+        ], 201);
+    }
+
+    public function image_edit(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'image_id' => 'required'
+        ]);
+
+        
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 401);
+        }
+
+        if($request->image){
+        $imageName = time().'.'.request()->image->getClientOriginalExtension();
+
+        request()->image->move(public_path('images'), $imageName);
+        }
+
+        $details = Image::where('id', $request->image_id)->first();
+
+        Image::where('id', $request->image_id)->update([
+            'name' => $request->name ? $request->name : $details->name,
+            'path' =>  $request->image ? 'images/'.$imageName : $details->path,
+            'status' => $request->status ? $request->status : $details->status
+            ]);
+
+
+        return response()->json([
+            'message' => 'Successfully updated  image!'
         ], 201);
     }
 }
