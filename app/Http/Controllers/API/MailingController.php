@@ -155,13 +155,19 @@ class MailingController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'name' => 'required|unique:customs'
+            'name' => 'required'
         ]);
 
         
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 401);
         }
+
+        $checker = Custom::where('name', $request->name)->where('status', 'active')->first();
+
+        if($checker >= 1)
+        return response()->json(['error' => 'Your Image Name Dose Exist Already'], 401);
+
 
         $imageName = time().'.'.request()->image->getClientOriginalExtension();
 
