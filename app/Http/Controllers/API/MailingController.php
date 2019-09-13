@@ -163,7 +163,7 @@ class MailingController extends Controller
             return response()->json(['error' => $validator->errors()], 401);
         }
 
-        $checker = Custom::where('name', $request->name)->where('status', 'active')->first();
+        $checker = Custom::where('name', $request->name)->where('status', 'active')->count();
 
         if($checker >= 1)
         return response()->json(['error' => 'Your Image Name Dose Exist Already'], 401);
