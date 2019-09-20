@@ -280,4 +280,46 @@ class MailingController extends Controller
             'message' => 'Successfully updated  image!'
         ], 201);
     }
+
+    public function save_mailing_image(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'image_path' => 'required',
+            'mailing_id' => 'required',
+        ]);
+
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 401);
+        }
+
+        Mailing::where('id', $request->mailing_id)->update([
+            'image_path' => $request->image_path
+        ]);
+
+        return response()->json([
+            'message' => 'Successfully updated  image!'
+        ], 201);
+    }
+
+    public function save_mailing_envelop(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'envelop_path' => 'required',
+            'mailing_id' => 'required',
+        ]);
+
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 401);
+        }
+
+        Mailing::where('id', $request->mailing_id)->update([
+            'envelop_path' => $request->envelop_path
+        ]);
+
+        return response()->json([
+            'message' => 'Successfully updated  envelope!'
+        ], 201);
+    }
 }

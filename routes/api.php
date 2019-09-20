@@ -26,7 +26,7 @@ Route::group([
     Route::post('reset_email', 'API\AuthController@reset_email');
     Route::post('password_reset', 'API\AuthController@password_reset');
 
-  
+
     Route::group([
       'middleware' => 'auth:api'
     ], function() {
@@ -51,6 +51,8 @@ Route::group([
         Route::post('custom/category/edit', 'API\MailingController@custom_edit');
         Route::post('image/add', 'API\MailingController@image_add');
         Route::post('image/edit', 'API\MailingController@image_edit');
+        Route::post('image/save_mailing', 'API\MailingController@save_mailing_image');
+        Route::post('envelop/save_mailing', 'API\MailingController@save_mailing_envelop');
 
 
         Route::get('contacts', 'API\ContactsController@contact_all');
@@ -59,6 +61,7 @@ Route::group([
         Route::post('contact/mailing/add', 'API\ContactsController@contact_add');
 
         Route::get('mailing/send/{id}', 'API\ContactsController@send_mailing');
+
 
     });
 });
