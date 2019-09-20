@@ -286,15 +286,20 @@ class MailingController extends Controller
         $validator = Validator::make($request->all(), [
             'image_path' => 'required',
             'mailing_id' => 'required',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
 
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 401);
         }
+        $path = "images/";
+        $imageName = time().'.'.request()->image->getClientOriginalExtension();
+
+        request()->image->move($path, $imageName);
 
         Mailing::where('id', $request->mailing_id)->update([
-            'image_path' => $request->image_path
+            'image_path' => 'sandbox/images/'.imageName
         ]);
 
         return response()->json([
@@ -307,6 +312,8 @@ class MailingController extends Controller
         $validator = Validator::make($request->all(), [
             'envelop_path' => 'required',
             'mailing_id' => 'required',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+
         ]);
 
 
@@ -314,8 +321,13 @@ class MailingController extends Controller
             return response()->json(['error' => $validator->errors()], 401);
         }
 
+        $path = "images/";
+        $imageName = time().'.'.request()->image->getClientOriginalExtension();
+
+        request()->image->move($path, $imageName);
+
         Mailing::where('id', $request->mailing_id)->update([
-            'envelop_path' => $request->envelop_path
+            'envelop_path' => 'sandbox/images/'.imageName
         ]);
 
         return response()->json([
