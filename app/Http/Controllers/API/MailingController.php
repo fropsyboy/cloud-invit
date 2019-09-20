@@ -16,7 +16,7 @@ use App\Image;
 
 class MailingController extends Controller
 {
-    
+
 
     public function invite()
     {
@@ -94,15 +94,15 @@ class MailingController extends Controller
                 'address' => $request->address,
                 'date' => $request->date,
                 'time' => $request->time,
-                ]);
+            ]);
 
             return response()->json('Mailing Details Updated successfully',201);
 
-            } catch (\Throwable $e) {
+        } catch (\Throwable $e) {
 
             return response()->json(['error' => $e], 401);
 
-            }
+        }
 
     }
 
@@ -135,7 +135,7 @@ class MailingController extends Controller
         $checker = Custom::where('id', $request->custom_id)->count();
 
         if($checker < 1)
-        return response()->json(['error' => 'Your Custome Image ID Dose not Exist'], 401);
+            return response()->json(['error' => 'Your Custome Image ID Dose not Exist'], 401);
 
         $user = auth()->user();
 
@@ -158,7 +158,7 @@ class MailingController extends Controller
             'name' => 'required'
         ]);
 
-        
+
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 401);
         }
@@ -166,12 +166,12 @@ class MailingController extends Controller
         $checker = Custom::where('name', $request->name)->where('status', 'active')->count();
 
         if($checker >= 1)
-        return response()->json(['error' => 'Your Image Name Dose Exist Already'], 401);
+            return response()->json(['error' => 'Your Image Name Dose Exist Already'], 401);
 
-
+        $path = "images/";
         $imageName = time().'.'.request()->image->getClientOriginalExtension();
 
-        request()->image->move(public_path('images'), $imageName);
+        request()->image->move($path, $imageName);
 
         $custom = new Custom([
             'name' => $request->name,
@@ -193,15 +193,15 @@ class MailingController extends Controller
             'custom_image_id' => 'required'
         ]);
 
-        
+
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 401);
         }
 
         if($request->image){
-        $imageName = time().'.'.request()->image->getClientOriginalExtension();
+            $imageName = time().'.'.request()->image->getClientOriginalExtension();
 
-        request()->image->move(public_path('images'), $imageName);
+            request()->image->move(public_path('images'), $imageName);
         }
 
         $details = Custom::where('id', $request->custom_image_id)->first();
@@ -211,7 +211,7 @@ class MailingController extends Controller
             'description' => $request->description ? $request->description : $details->description,
             'path' =>  $request->image ? 'images/'.$imageName : $details->path,
             'status' => $request->status ? $request->status : $details->status
-            ]);
+        ]);
 
 
         return response()->json([
@@ -226,14 +226,14 @@ class MailingController extends Controller
             'name' => 'required'
         ]);
 
-        
+
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 401);
         }
-
+        $path = "images/";
         $imageName = time().'.'.request()->image->getClientOriginalExtension();
 
-        request()->image->move(public_path('images'), $imageName);
+        request()->image->move($path, $imageName);
 
 
         $custom = new Image([
@@ -256,15 +256,15 @@ class MailingController extends Controller
             'image_id' => 'required'
         ]);
 
-        
+
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 401);
         }
 
         if($request->image){
-        $imageName = time().'.'.request()->image->getClientOriginalExtension();
+            $imageName = time().'.'.request()->image->getClientOriginalExtension();
 
-        request()->image->move(public_path('images'), $imageName);
+            request()->image->move(public_path('images'), $imageName);
         }
 
         $details = Image::where('id', $request->image_id)->first();
@@ -273,7 +273,7 @@ class MailingController extends Controller
             'name' => $request->name ? $request->name : $details->name,
             'path' =>  $request->image ? 'images/'.$imageName : $details->path,
             'status' => $request->status ? $request->status : $details->status
-            ]);
+        ]);
 
 
         return response()->json([
