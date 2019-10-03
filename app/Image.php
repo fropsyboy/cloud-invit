@@ -9,6 +9,6 @@ class Image extends Model
     //
 
     protected $fillable = [
-        'name', 'custom_id', 'status', 'path'
+        'name', 'custom_id', 'status', 'path', 'front', 'back'
     ];
 }
