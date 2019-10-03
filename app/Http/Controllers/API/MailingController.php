@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Envelope;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -114,9 +115,25 @@ class MailingController extends Controller
 
     }
 
+    public function one_envelope($id)
+    {
+        $customs = Envelope::where('id',$id)->where('status', 'active')->orderBy('id', 'desc')->get();
+
+        return response()->json($customs,200);
+
+    }
+
     public function custom_images($custom_id)
     {
         $customs = Image::where('custom_id',$custom_id)->where('status', 'active')->orderBy('id', 'desc')->get();
+
+        return response()->json($customs,200);
+
+    }
+
+    public function envelopes()
+    {
+        $customs = Envelope::orderBy('id', 'desc')->get();
 
         return response()->json($customs,200);
 
@@ -216,6 +233,33 @@ class MailingController extends Controller
 
         return response()->json([
             'message' => 'Successfully updated custome image!'
+        ], 201);
+    }
+
+    public function envelop_add(Request $request)
+    {
+
+        $path = "images/";
+        $imagFront = time().'front.'.request()->front->getClientOriginalExtension();
+        $imagBack = time().'front.'.request()->back->getClientOriginalExtension();
+
+
+        request()->front->move($path, $imagFront);
+        request()->back->move($path, $imagBack);
+
+
+
+        $custom = new Envelope([
+            'path' =>  'images/'.$imagFront,
+            'front' =>  'images/'.$imagFront,
+            'back' =>  'images/'.$imagBack,
+            'status' => 'active'
+        ]);
+        $custom->save();
+
+
+        return response()->json([
+            'message' => 'Successfully uploaded image!'
         ], 201);
     }
 
