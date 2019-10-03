@@ -46,10 +46,13 @@ Route::group([
 
         Route::get('custom', 'API\MailingController@custom');
         Route::get('custom/images/{id}', 'API\MailingController@custom_images');
+        Route::get('envelopes', 'API\MailingController@envelopes');
+        Route::get('envelope/{id}', 'API\MailingController@one_envelope');
         Route::post('favourite/add', 'API\MailingController@favourite_add');
         Route::post('custom/category/add', 'API\MailingController@custom_add');
         Route::post('custom/category/edit', 'API\MailingController@custom_edit');
         Route::post('image/add', 'API\MailingController@image_add');
+        Route::post('image/envelope', 'API\MailingController@envelop_add');
         Route::post('image/edit', 'API\MailingController@image_edit');
         Route::post('image/save_mailing', 'API\MailingController@save_mailing_image');
         Route::post('envelop/save_mailing', 'API\MailingController@save_mailing_envelop');
