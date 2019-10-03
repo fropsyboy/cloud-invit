@@ -231,15 +231,21 @@ class MailingController extends Controller
             return response()->json(['error' => $validator->errors()], 401);
         }
         $path = "images/";
-        $imageName = time().'.'.request()->image->getClientOriginalExtension();
+        $imagFront = time().'front.'.request()->front->getClientOriginalExtension();
+        $imagBack = time().'front.'.request()->back->getClientOriginalExtension();
 
-        request()->image->move($path, $imageName);
+
+        request()->front->move($path, $imagFront);
+        request()->back->move($path, $imagBack);
+
 
 
         $custom = new Image([
             'name' => $request->name,
             'custom_id' => $request->custom_image_id,
-            'path' =>  'images/'.$imageName,
+            'path' =>  'images/'.$imagFront,
+            'front' =>  'images/'.$imagFront,
+            'back' =>  'images/'.$imagBack,
             'status' => 'active'
         ]);
         $custom->save();
