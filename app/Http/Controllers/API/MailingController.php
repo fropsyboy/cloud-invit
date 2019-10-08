@@ -185,7 +185,7 @@ class MailingController extends Controller
         if($checker >= 1)
             return response()->json(['error' => 'Your Image Name Dose Exist Already'], 401);
 
-        $path = "img/";
+        $path = "images/";
         $imageName = time().'.'.request()->image->getClientOriginalExtension();
 
         request()->image->move($path, $imageName);
@@ -239,7 +239,7 @@ class MailingController extends Controller
     public function envelop_add(Request $request)
     {
 
-        $path = "img/";
+        $path = "images/";
         $imagFront = time().'front.'.request()->front->getClientOriginalExtension();
         $imagBack = time().'front.'.request()->back->getClientOriginalExtension();
 
@@ -274,7 +274,7 @@ class MailingController extends Controller
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 401);
         }
-        $path = "img/";
+        $path = "images/";
         $imagFront = time().'front.'.request()->front->getClientOriginalExtension();
         $imagBack = time().'front.'.request()->back->getClientOriginalExtension();
 
@@ -343,7 +343,7 @@ class MailingController extends Controller
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 401);
         }
-        $path = "img/";
+        $path = "images/";
         $imageName = time().'.'.request()->image->getClientOriginalExtension();
 
         request()->image->move($path, $imageName);
@@ -371,7 +371,7 @@ class MailingController extends Controller
             return response()->json(['error' => $validator->errors()], 401);
         }
 
-        $path = "img/";
+        $path = "images/";
         $imageName = time().'.'.request()->image->getClientOriginalExtension();
 
         request()->image->move($path, $imageName);
