@@ -447,20 +447,21 @@ class MailingController extends Controller
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 401);
         }
+        $ran = bin2hex(random_bytes(10)) ;
 
 
         $custom = new Sharing([
             'mailing_id' => $request->mailing_id,
-            'ref' => bin2hex(random_bytes(10)),
+            'ref' => $ran,
             'name' =>  $request->name,
             'email' => $request->email
         ]);
         $custom->save();
 
+        $share_link = $request->mailing_id + "/" + $ran ;
 
-        return response()->json([
-            'message' => 'Successfully added  the user!'
-        ], 201);
+
+        return response()->json($share_link,200);
     }
 
     public function archive(Request $request)
