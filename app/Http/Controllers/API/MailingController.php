@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\API;
 
 use App\Envelope;
+use App\Sharing;
+use App\Wedding;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -23,7 +25,7 @@ class MailingController extends Controller
     {
         $user = auth()->user();
 
-        $mailing = Mailing::where('user_id',$user->id)->orderBy('id','desc')->get();
+        $mailing = Mailing::where('user_id',$user->id)->where('status','active')->orderBy('id','desc')->get();
 
         return response()->json($mailing,200);
 
@@ -382,6 +384,101 @@ class MailingController extends Controller
 
         return response()->json([
             'message' => 'Successfully updated  envelope!'
+        ], 201);
+    }
+
+    public function wedding_images($mailing_id)
+    {
+        $images = Wedding::where('mailing_id', $mailing_id)->where('status','active')->orderby('id', 'desc')->get();
+
+        return response()->json($images,200);
+    }
+
+    public function wedding_images_save(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'mailing_id' => 'required',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+
+        ]);
+
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 401);
+        }
+
+        $path = "images/";
+        $imageName = time().'.'.request()->image->getClientOriginalExtension();
+
+        request()->image->move($path, $imageName);
+
+        $custom = new Wedding([
+            'mailing_id' => $request->mailing_id,
+            'image' =>  'images/'.$imageName,
+            'status' => 'active'
+        ]);
+        $custom->save();
+
+
+        return response()->json([
+            'message' => 'Successfully uploaded  the image!'
+        ], 201);
+    }
+
+    public function wedding_delete($image_id)
+    {
+        Wedding::where('id', $image_id)->update([
+            'status' => 'deleted'
+        ]);
+        return response()->json([
+            'message' => 'Successfully deleted  the image!'
+        ], 201);
+    }
+
+    public function wedding_share(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'mailing_id' => 'required',
+            'name' => 'required',
+            'email' => 'required',
+        ]);
+
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 401);
+        }
+
+
+        $custom = new Sharing([
+            'mailing_id' => $request->mailing_id,
+            'ref' => bin2hex(random_bytes(10)),
+            'name' =>  $request->name,
+            'email' => $request->email
+        ]);
+        $custom->save();
+
+
+        return response()->json([
+            'message' => 'Successfully added  the user!'
+        ], 201);
+    }
+
+    public function archive(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'mailing_id' => 'required'
+        ]);
+
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 401);
+        }
+
+        Mailing::where('id', $request->mailing_id)->update([
+            'status' => 'archived'
+        ]);
+        return response()->json([
+            'message' => 'Successfully archived  the mailing!'
         ], 201);
     }
 }
