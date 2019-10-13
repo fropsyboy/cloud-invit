@@ -458,7 +458,7 @@ class MailingController extends Controller
         ]);
         $custom->save();
 
-        $share_link = $request->mailing_id + "/" + $ran ;
+        $share_link = "https://cloudinvite.com/share/".$request->mailing_id."/".$ran;
 
 
         return response()->json($share_link,200);
