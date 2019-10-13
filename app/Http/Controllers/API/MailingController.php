@@ -117,9 +117,9 @@ class MailingController extends Controller
 
     }
 
-    public function one_envelope($id)
+    public function one_envelope(Request $request)
     {
-        $customs = Envelope::where('id',$id)->where('status', 'active')->orderBy('id', 'desc')->get();
+        $customs = Envelope::where('id',$request->envelop_id)->where('status', 'active')->first();
 
         return response()->json($customs,200);
 
