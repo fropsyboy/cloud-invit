@@ -243,7 +243,7 @@ class MailingController extends Controller
 
         $path = "images/";
         $imagFront = time().'front.'.request()->front->getClientOriginalExtension();
-        $imagBack = time().'front.'.request()->back->getClientOriginalExtension();
+        $imagBack = time().'back.'.request()->back->getClientOriginalExtension();
 
 
         request()->front->move($path, $imagFront);
