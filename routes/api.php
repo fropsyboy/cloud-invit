@@ -25,6 +25,7 @@ Route::group([
     Route::post('signup', 'API\AuthController@signup');
     Route::post('reset_email', 'API\AuthController@reset_email');
     Route::post('password_reset', 'API\AuthController@password_reset');
+    Route::post('share', 'API\MailingController@share_link');
 
 
     Route::group([
@@ -61,7 +62,6 @@ Route::group([
         Route::post('wedding/image', 'API\MailingController@wedding_images_save');
         Route::post('wedding/share', 'API\MailingController@wedding_share');
         Route::post('mailing_archive', 'API\MailingController@archive');
-        Route::post('share', 'API\MailingController@share_link');
 
 
         Route::post('add/address', 'API\ContactsController@address_add');
