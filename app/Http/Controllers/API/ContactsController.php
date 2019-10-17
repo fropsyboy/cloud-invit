@@ -78,14 +78,28 @@ class ContactsController extends Controller
             return response()->json(['error' => $validator->errors()], 401);
         }
 
+
         $user = auth()->user();
 
-        $contact = new Contact([
-            'user_id' => $user->id,
-            'name' => $request->name,
-            'email' => $request->email,
-        ]);
-        $contact->save();
+        try{
+
+            $contact = new Contact([
+                'user_id' => $user->id,
+                'name' => $request->name,
+                'email' => $request->email,
+            ]);
+            $contact->save();
+
+        } catch (\Throwable $e) {
+
+                return response()->json(['error' => 'A mailing contact with this email already exists'], 400);
+
+        }
+        
+        $checker = Mailing_Contact::where('contact_id', $contact->id)->count();
+
+        if ( $checker > 0 )
+            return response()->json(['error' => 'A mailing contact with this email already exists'], 400);
 
         $mailing_Contact = new Mailing_Contact([
             'user_id' => $user->id,
@@ -118,6 +132,50 @@ class ContactsController extends Controller
 
         }
 
+    }
+
+    public function address_book()
+    {
+        $user = auth()->user();
+
+        $contacts = Contact::where('user_id', $user->id)->orderby('id', 'desc')->get();
+
+            return response()->json([
+                'addresses' => $contacts
+            ], 200);
+
+    }
+
+    public function address_add(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'contact_id' => 'required|string',
+            'mailing_id' => 'required|string'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 401);
+        }
+
+        $checker = Mailing_Contact::where('contact_id', $request->contact_id)->count();
+
+        if($checker > 0 )
+            return response()->json(['error' => 'A mailing contact with this email already exists'], 400);
+
+        $user = auth()->user();
+
+
+        $mailing_Contact = new Mailing_Contact([
+            'user_id' => $user->id,
+            'contact_id' => $request->contact_id,
+            'mailing_id' => $request->mailing_id,
+            'plus' => $request->plus ? $request->plus : 0
+        ]);
+        $mailing_Contact->save();
+
+        return response()->json([
+            'message' => 'Contact Successfully Added!'
+        ], 201);
     }
 
 
