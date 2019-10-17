@@ -64,6 +64,8 @@ Route::group([
         Route::post('share', 'API\MailingController@share_link');
 
 
+        Route::post('add/address', 'API\ContactsController@address_add');
+        Route::get('address', 'API\ContactsController@address_book');
         Route::get('contacts', 'API\ContactsController@contact_all');
         Route::get('contacts/mailing/{id}', 'API\ContactsController@contact');
         Route::get('contact/mailing/{id}/{mailing_id}', 'API\ContactsController@contact_get');
