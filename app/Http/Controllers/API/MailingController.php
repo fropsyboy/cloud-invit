@@ -482,4 +482,26 @@ class MailingController extends Controller
             'message' => 'Successfully archived  the mailing!'
         ], 201);
     }
+
+    public function share_link(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'mailing_id' => 'required',
+            'random_strings' => 'required'
+        ]);
+
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 401);
+        }
+
+        $check = Sharing::where('mailing_id', $request->mailing_id)->where('ref', $request->random_strings)->count();
+
+        if($check < 1)
+            return response()->json(['error' => 'The sharing details passed is incorrect'], 400);
+
+        $images = Wedding::where('mailing_id', $request->mailing_id)->orderby('id', 'desc')->get();
+
+        return response()->json($images,200);
+    }
 }

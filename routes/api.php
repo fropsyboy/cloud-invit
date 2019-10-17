@@ -61,6 +61,8 @@ Route::group([
         Route::post('wedding/image', 'API\MailingController@wedding_images_save');
         Route::post('wedding/share', 'API\MailingController@wedding_share');
         Route::post('mailing_archive', 'API\MailingController@archive');
+        Route::post('share', 'API\MailingController@share_link');
+
 
         Route::get('contacts', 'API\ContactsController@contact_all');
         Route::get('contacts/mailing/{id}', 'API\ContactsController@contact');
