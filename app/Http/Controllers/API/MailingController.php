@@ -500,7 +500,7 @@ class MailingController extends Controller
         if($check < 1)
             return response()->json(['error' => 'The sharing details passed is incorrect'], 400);
 
-        $images = Wedding::where('mailing_id', $request->mailing_id)->orderby('id', 'desc')->get();
+        $images = Wedding::where('mailing_id', $request->mailing_id)->where('status', 'active')->orderby('id', 'desc')->get();
 
         return response()->json($images,200);
     }
