@@ -351,7 +351,7 @@ class MailingController extends Controller
         request()->image->move($path, $imageName);
 
         Mailing::where('id', $request->mailing_id)->update([
-            'image_path' => 'sandbox/images/'.$imageName
+            'image_path' => 'images/'.$imageName
         ]);
 
         return response()->json([
@@ -379,7 +379,7 @@ class MailingController extends Controller
         request()->image->move($path, $imageName);
 
         Mailing::where('id', $request->mailing_id)->update([
-            'envelop_path' => 'sandbox/images/'.$imageName
+            'envelop_path' => 'images/'.$imageName
         ]);
 
         return response()->json([
